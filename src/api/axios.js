@@ -1,7 +1,17 @@
 import axios from 'axios';
 
+// Resolve API Base URL (supports both VITE_API_BASE_URL and VITE_API_URL, auto-appends /api if omitted)
+const rawBaseUrl = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api').trim();
+let resolvedBaseUrl = rawBaseUrl.replace(/\/+$/, '');
+
+if (resolvedBaseUrl && resolvedBaseUrl !== '/api') {
+  if (!resolvedBaseUrl.endsWith('/api')) {
+    resolvedBaseUrl += '/api';
+  }
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: resolvedBaseUrl,
   headers: {
     'Content-Type': 'application/json',
   },
