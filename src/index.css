@@ -158,6 +158,13 @@
   border-radius: 16px;
 }
 
+/* Remove Leaflet default white square background and border on custom marker icons */
+.leaflet-div-icon {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .leaflet-popup-content-wrapper {
   background-color: #ffffff !important;
   color: #0f172a !important;
@@ -169,3 +176,4 @@
 .leaflet-popup-tip {
   background-color: #ffffff !important;
 }
+

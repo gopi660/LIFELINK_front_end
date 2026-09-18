@@ -29,7 +29,10 @@ export default function MapView() {
       lat: coords ? coords[0] : 12.9716,
       lng: coords ? coords[1] : 77.5946
     });
-    fetchRequests({ city });
+    fetchRequests({ 
+      city,
+      blood_group: bloodGroup || undefined
+    });
   }, [bloodGroup, city, distance, onlyAvailable, fetchNearbyDonors, fetchRequests]);
 
   return (
