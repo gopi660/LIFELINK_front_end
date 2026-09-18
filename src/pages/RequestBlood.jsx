@@ -62,15 +62,23 @@ export default function RequestBlood() {
       toast.error('Please specify the required patient blood group.');
       return;
     }
+    if (!formData.contact_number) {
+      toast.error('Please specify the contact phone number.');
+      return;
+    }
 
-    const res = await createRequest({
-      ...formData,
-      units: parseInt(formData.units) || 1
-    });
+    try {
+      const res = await createRequest({
+        ...formData,
+        units: parseInt(formData.units) || 1
+      });
 
-    if (res) {
-      toast.success('Emergency alert successfully dispatched to compatible donors!');
-      navigate('/my-requests');
+      if (res) {
+        toast.success('Emergency alert successfully dispatched to compatible donors!');
+        navigate('/my-requests');
+      }
+    } catch (err) {
+      console.error('Request dispatch error:', err);
     }
   };
 

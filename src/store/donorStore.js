@@ -28,13 +28,23 @@ export const useDonorStore = create((set) => ({
     }
   },
 
+  respondedMap: {},
+
   respondToRequest: async (requestId, response, notes) => {
     try {
       const res = await donorsApi.respondToRequest(requestId, response, notes);
-      toast.success(res.data.message);
+      toast.success(res.data.message || `Response recorded: ${response}`);
+      set((state) => ({
+        respondedMap: {
+          ...state.respondedMap,
+          [requestId]: response
+        }
+      }));
       return res.data;
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Failed to submit response');
+      const msg = err.response?.data?.error || 'Failed to submit response';
+      toast.error(msg);
+      throw new Error(msg);
     }
   }
 }));

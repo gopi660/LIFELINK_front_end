@@ -44,19 +44,32 @@ export const useRequestStore = create((set) => ({
     }
   },
 
-  createBloodRequest: async (formData) => {
+  createRequest: async (formData) => {
     set({ loading: true });
     try {
       const res = await requestsApi.createRequest(formData);
       toast.success('Emergency blood request posted! Donors are being notified.');
-      set({ loading: false });
+      const newReq = res.data?.request;
+      if (newReq) {
+        set((state) => ({
+          requests: [newReq, ...state.requests],
+          myRequests: [newReq, ...state.myRequests],
+          loading: false
+        }));
+      } else {
+        set({ loading: false });
+      }
       return res.data;
     } catch (err) {
-      const msg = err.response?.data?.error || 'Failed to submit request';
+      const msg = err.response?.data?.error || err.message || 'Failed to submit request';
       toast.error(msg);
       set({ loading: false });
       throw new Error(msg);
     }
+  },
+
+  createBloodRequest: async (formData) => {
+    return useRequestStore.getState().createRequest(formData);
   },
 
   updateStatus: async (id, status) => {

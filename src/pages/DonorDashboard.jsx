@@ -17,7 +17,7 @@ import {
 
 export default function DonorDashboard() {
   const { user, fetchMe } = useAuthStore();
-  const { toggleAvailability, respondToRequest } = useDonorStore();
+  const { toggleAvailability, respondToRequest, respondedMap } = useDonorStore();
   const { requests, fetchRequests } = useRequestStore();
 
   const [availability, setAvailability] = useState(user?.donor_profile?.availability ?? true);
@@ -220,38 +220,63 @@ export default function DonorDashboard() {
                   )}
 
                   {/* Donor Response Action Buttons Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 w-full">
-                    <button 
-                      onClick={() => handleRespond(req.id, 'Accepted')}
-                      disabled={respondingId === req.id}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer truncate"
-                    >
-                      <CheckCircle className="w-3.5 h-3.5 shrink-0" /> Accept Request
-                    </button>
+                  {(() => {
+                    const isAccepted = respondedMap?.[req.id] === 'Accepted' || 
+                      req.accepted_user_ids?.includes(user?.id) || 
+                      req.accepted_donor_ids?.includes(donor?.id);
 
-                    <button 
-                      onClick={() => handleRespond(req.id, 'Declined')}
-                      disabled={respondingId === req.id}
-                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate border border-slate-200"
-                    >
-                      <XCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" /> Decline
-                    </button>
+                    if (isAccepted) {
+                      return (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 w-full">
+                          <div className="w-full bg-emerald-50 border border-emerald-300 text-emerald-700 font-semibold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 shadow-xs">
+                            <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <span>You Accepted This Request</span>
+                          </div>
+                          <a 
+                            href={`tel:${req.contact_number}`}
+                            className="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors truncate shadow-xs"
+                          >
+                            <PhoneCall className="w-3.5 h-3.5 text-red-600 shrink-0" /> Call Hospital ({req.contact_number})
+                          </a>
+                        </div>
+                      );
+                    }
 
-                    <button 
-                      onClick={() => handleRespond(req.id, 'Maybe')}
-                      disabled={respondingId === req.id}
-                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate border border-slate-200"
-                    >
-                      <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Maybe Later
-                    </button>
+                    return (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 w-full">
+                        <button 
+                          onClick={() => handleRespond(req.id, 'Accepted')}
+                          disabled={respondingId === req.id}
+                          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer truncate"
+                        >
+                          <CheckCircle className="w-3.5 h-3.5 shrink-0" /> Accept Request
+                        </button>
 
-                    <a 
-                      href={`tel:${req.contact_number}`}
-                      className="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors truncate shadow-xs"
-                    >
-                      <PhoneCall className="w-3.5 h-3.5 text-red-600 shrink-0" /> Call Hospital
-                    </a>
-                  </div>
+                        <button 
+                          onClick={() => handleRespond(req.id, 'Declined')}
+                          disabled={respondingId === req.id}
+                          className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate border border-slate-200"
+                        >
+                          <XCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" /> Decline
+                        </button>
+
+                        <button 
+                          onClick={() => handleRespond(req.id, 'Maybe')}
+                          disabled={respondingId === req.id}
+                          className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate border border-slate-200"
+                        >
+                          <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Maybe Later
+                        </button>
+
+                        <a 
+                          href={`tel:${req.contact_number}`}
+                          className="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors truncate shadow-xs"
+                        >
+                          <PhoneCall className="w-3.5 h-3.5 text-red-600 shrink-0" /> Call Hospital
+                        </a>
+                      </div>
+                    );
+                  })()}
 
                 </div>
               ))
