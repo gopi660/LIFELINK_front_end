@@ -110,22 +110,49 @@ export default function MapView() {
                 <label className="block text-xs font-semibold text-slate-700">
                   Search Radius Range
                 </label>
-                <span className="text-xs font-bold text-red-600">{distance} km</span>
+                <span className="text-xs font-bold text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-md">
+                  {distance} km
+                </span>
               </div>
-              <input 
-                type="range"
-                min="5"
-                max="100"
-                step="5"
-                value={distance}
-                onChange={(e) => setDistance(e.target.value)}
-                className="w-full accent-red-600 cursor-pointer h-2 bg-slate-200 rounded-lg"
-              />
-              <div className="flex justify-between text-[10px] text-slate-400">
-                <span>5 km</span>
-                <span>25 km</span>
-                <span>50 km</span>
-                <span>100 km</span>
+              <div className="pt-1">
+                <input 
+                  type="range"
+                  min="5"
+                  max="100"
+                  step="5"
+                  value={distance}
+                  onChange={(e) => setDistance(Number(e.target.value))}
+                  className="w-full accent-red-600 cursor-pointer h-2 bg-slate-200 rounded-lg block"
+                />
+                {/* Mathematically precise tick labels matching actual range slider value */}
+                <div className="relative w-full h-4 mt-1.5 text-[10px] text-slate-400 font-medium select-none">
+                  {[
+                    { val: 5, label: '5 km' },
+                    { val: 25, label: '25 km' },
+                    { val: 50, label: '50 km' },
+                    { val: 75, label: '75 km' },
+                    { val: 100, label: '100 km' }
+                  ].map((tick) => {
+                    const percent = ((tick.val - 5) / 95) * 100;
+                    const isActive = Number(distance) === tick.val;
+                    return (
+                      <button
+                        key={tick.val}
+                        type="button"
+                        onClick={() => setDistance(tick.val)}
+                        style={{ 
+                          left: `${percent}%`, 
+                          transform: percent === 0 ? 'none' : percent === 100 ? 'translateX(-100%)' : 'translateX(-50%)' 
+                        }}
+                        className={`absolute top-0 cursor-pointer transition-colors ${
+                          isActive ? 'text-red-600 font-bold' : 'hover:text-slate-700'
+                        }`}
+                      >
+                        {tick.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
