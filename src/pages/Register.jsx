@@ -85,10 +85,15 @@ export default function Register() {
       } : null
     };
 
-    const success = await register(payload);
-    if (success) {
-      toast.success('Account created! Welcome to LifeLink Network.');
-      navigate(redirectPath, { replace: true });
+    try {
+      const user = await register(payload);
+      if (user) {
+        toast.success('Account created! Welcome to LifeLink Network.');
+        navigate(redirectPath, { replace: true });
+      }
+    } catch (err) {
+      // Error is already formatted and toasted by authStore
+      console.error('Registration attempt failed:', err);
     }
   };
 
