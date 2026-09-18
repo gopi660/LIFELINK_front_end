@@ -49,7 +49,9 @@ export default function DonorDashboard() {
   };
 
   const donor = user?.donor_profile;
-  const compatibleRequests = requests.filter(r => r.status !== 'Completed' && r.status !== 'Cancelled');
+  const compatibleRequests = (Array.isArray(requests) ? requests : []).filter(
+    r => r && r.status !== 'Completed' && r.status !== 'Cancelled'
+  );
 
   return (
     <div className="w-full py-8 text-slate-900 bg-slate-50 min-h-screen">

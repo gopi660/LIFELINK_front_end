@@ -10,9 +10,10 @@ export const useDonorStore = create((set) => ({
     set({ loading: true });
     try {
       const res = await donorsApi.getNearbyDonors(params);
-      set({ nearbyDonors: res.data.donors, loading: false });
+      const list = Array.isArray(res?.data?.donors) ? res.data.donors : [];
+      set({ nearbyDonors: list, loading: false });
     } catch {
-      set({ loading: false });
+      set({ nearbyDonors: [], loading: false });
     }
   },
 

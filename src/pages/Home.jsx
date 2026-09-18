@@ -30,11 +30,17 @@ export default function Home() {
     fetchRequests();
     fetchNearbyDonors({ city: 'Bangalore' });
     donorsApi.getPublicStats()
-      .then(res => setStats(res.data))
+      .then(res => {
+        if (res?.data && typeof res.data === 'object' && !Array.isArray(res.data)) {
+          setStats(res.data);
+        }
+      })
       .catch(() => {});
   }, [fetchRequests, fetchNearbyDonors]);
 
-  const activeRequests = requests.filter(r => r.status !== 'Completed' && r.status !== 'Cancelled');
+  const activeRequests = (Array.isArray(requests) ? requests : []).filter(
+    r => r && r.status !== 'Completed' && r.status !== 'Cancelled'
+  );
   const tickerRequest = activeRequests[0];
 
   return (

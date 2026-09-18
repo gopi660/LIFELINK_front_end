@@ -124,34 +124,13 @@ export default function MapView() {
                   onChange={(e) => setDistance(Number(e.target.value))}
                   className="w-full accent-red-600 cursor-pointer h-2 bg-slate-200 rounded-lg block"
                 />
-                {/* Mathematically precise tick labels matching actual range slider value */}
-                <div className="relative w-full h-4 mt-1.5 text-[10px] text-slate-400 font-medium select-none">
-                  {[
-                    { val: 5, label: '5 km' },
-                    { val: 25, label: '25 km' },
-                    { val: 50, label: '50 km' },
-                    { val: 75, label: '75 km' },
-                    { val: 100, label: '100 km' }
-                  ].map((tick) => {
-                    const percent = ((tick.val - 5) / 95) * 100;
-                    const isActive = Number(distance) === tick.val;
-                    return (
-                      <button
-                        key={tick.val}
-                        type="button"
-                        onClick={() => setDistance(tick.val)}
-                        style={{ 
-                          left: `${percent}%`, 
-                          transform: percent === 0 ? 'none' : percent === 100 ? 'translateX(-100%)' : 'translateX(-50%)' 
-                        }}
-                        className={`absolute top-0 cursor-pointer transition-colors ${
-                          isActive ? 'text-red-600 font-bold' : 'hover:text-slate-700'
-                        }`}
-                      >
-                        {tick.label}
-                      </button>
-                    );
-                  })}
+                {/* 5-interval tick labels with 50 km dead center */}
+                <div className="flex justify-between text-xs text-slate-400 mt-1.5 font-medium px-0.5 select-none">
+                  <span className={distance <= 10 ? 'text-red-600 font-bold' : ''}>5 km</span>
+                  <span className={distance >= 20 && distance <= 30 ? 'text-red-600 font-bold' : ''}>25 km</span>
+                  <span className={distance >= 45 && distance <= 55 ? 'text-red-600 font-bold' : ''}>50 km</span>
+                  <span className={distance >= 70 && distance <= 80 ? 'text-red-600 font-bold' : ''}>75 km</span>
+                  <span className={distance >= 95 ? 'text-red-600 font-bold' : ''}>100 km</span>
                 </div>
               </div>
             </div>
@@ -219,7 +198,15 @@ export default function MapView() {
                           </div>
                           <div>
                             <h4 className="font-semibold text-xs text-slate-900">{d.name}</h4>
-                            <p className="text-[11px] text-slate-500 font-normal">{d.city} • <span className="text-red-600 font-medium">{d.distance_km != null ? `${d.distance_km} km away` : 'Nearby'}</span></p>
+                            <p className="text-[11px] text-slate-500 font-normal">
+                              {d.address || d.city} • <span className="text-red-600 font-semibold">
+                                {d.distance_km != null 
+                                  ? d.distance_km <= 0.2 
+                                    ? '< 1 km away' 
+                                    : `${Number(d.distance_km).toFixed(1)} km away` 
+                                  : 'Nearby'}
+                              </span>
+                            </p>
                           </div>
                         </div>
                         <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-md border ${

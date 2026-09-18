@@ -19,4 +19,16 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Interceptor to handle HTML responses when API base URL is unconfigured
+api.interceptors.response.use(
+  (response) => {
+    if (typeof response.data === 'string' && response.data.trim().startsWith('<!DOCTYPE html')) {
+      console.warn('LifeLink API Warning: Received HTML fallback instead of JSON. Check that VITE_API_BASE_URL is configured on your deployment platform.');
+      return Promise.reject(new Error('API returned HTML instead of JSON. Check VITE_API_BASE_URL.'));
+    }
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
+
 export default api;

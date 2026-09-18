@@ -13,9 +13,10 @@ export const useRequestStore = create((set) => ({
     set({ loading: true });
     try {
       const res = await requestsApi.getRequests(filters);
-      set({ requests: res.data.requests, loading: false });
+      const list = Array.isArray(res?.data?.requests) ? res.data.requests : [];
+      set({ requests: list, loading: false });
     } catch (err) {
-      set({ loading: false, error: err.message });
+      set({ requests: [], loading: false, error: err.message });
     }
   },
 
@@ -24,9 +25,10 @@ export const useRequestStore = create((set) => ({
     set({ loading: true });
     try {
       const res = await requestsApi.getRequests({ my_requests: 'true', user_id: userId });
-      set({ myRequests: res.data.requests, loading: false });
+      const list = Array.isArray(res?.data?.requests) ? res.data.requests : [];
+      set({ myRequests: list, loading: false });
     } catch {
-      set({ loading: false });
+      set({ myRequests: [], loading: false });
     }
   },
 

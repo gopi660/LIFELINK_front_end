@@ -2,8 +2,17 @@ import { create } from 'zustand';
 import { authApi } from '../api/auth';
 import toast from 'react-hot-toast';
 
+const getSavedUser = () => {
+  try {
+    const raw = localStorage.getItem('lifelink_user');
+    return raw && raw !== 'undefined' ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
 export const useAuthStore = create((set, get) => ({
-  user: JSON.parse(localStorage.getItem('lifelink_user')) || null,
+  user: getSavedUser(),
   token: localStorage.getItem('lifelink_token') || null,
   loading: false,
   error: null,
