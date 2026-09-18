@@ -52,46 +52,46 @@ export default function DonorDashboard() {
   const compatibleRequests = requests.filter(r => r.status !== 'Completed' && r.status !== 'Cancelled');
 
   return (
-    <div className="w-full py-8 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+    <div className="w-full py-8 text-slate-900 bg-slate-50 min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         {/* Header Bar */}
-        <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-slate-200 dark:border-slate-800/80">
+        <div className="glass-card rounded-2xl p-6 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-slate-200">
           
           <div className="flex items-center gap-4">
             <div className="relative">
               <img 
                 src={donor?.photo_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`} 
                 alt="Donor Avatar" 
-                className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 object-cover border-2 border-rose-500 shadow-md"
+                className="w-14 h-14 rounded-xl bg-slate-100 object-cover border-2 border-red-600 shadow-xs"
               />
-              <span className="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-lg bg-rose-600 text-white font-black text-[10px] shadow">
+              <span className="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded bg-red-600 text-white font-bold text-[10px]">
                 {donor?.blood_group || 'O+'}
               </span>
             </div>
 
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-heading font-black text-slate-900 dark:text-white">{user?.name}</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-slate-900">{user?.name}</h1>
                 {donor?.verified && (
-                  <span className="flex items-center gap-1 px-2.5 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-extrabold rounded-full border border-emerald-500/20">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Verified Donor
+                  <span className="flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-md border border-slate-200">
+                    <ShieldCheck className="w-3.5 h-3.5 text-red-600" /> Verified Donor
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-2 font-medium">
-                <MapPin className="w-3.5 h-3.5 text-rose-500" /> {donor?.city || 'Bangalore'} • Blood Group: <strong className="text-rose-600 dark:text-rose-400 font-black">{donor?.blood_group || 'O+'}</strong>
+              <p className="text-xs text-slate-500 mt-1 flex items-center gap-2 font-normal">
+                <MapPin className="w-3.5 h-3.5 text-red-600" /> {donor?.city || 'Bangalore'} • Blood Group: <strong className="text-red-600 font-bold">{donor?.blood_group || 'O+'}</strong>
               </p>
             </div>
           </div>
 
           {/* Availability Toggle Switch */}
-          <div className="glass-card border border-slate-200 dark:border-slate-800 p-4 rounded-2xl flex items-center gap-5 w-full md:w-auto justify-between">
+          <div className="glass-card border border-slate-200 p-4 rounded-xl flex items-center gap-5 w-full md:w-auto justify-between shadow-xs">
             <div className="space-y-0.5">
-              <div className="text-[10px] uppercase font-extrabold tracking-widest text-slate-500 dark:text-slate-400">Current Availability</div>
-              <div className="text-xs font-black flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${availability ? 'bg-emerald-500 animate-ping' : 'bg-slate-400 dark:bg-slate-600'}`}></span>
-                <span className={availability ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'}>
+              <div className="text-[10px] uppercase font-semibold tracking-wider text-slate-500">Current Availability</div>
+              <div className="text-xs font-semibold flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${availability ? 'bg-red-600' : 'bg-slate-400'}`}></span>
+                <span className={availability ? 'text-slate-900' : 'text-slate-500'}>
                   {availability ? 'ACTIVE & READY TO DONATE' : 'CURRENTLY UNAVAILABLE'}
                 </span>
               </div>
@@ -99,10 +99,10 @@ export default function DonorDashboard() {
 
             <button 
               onClick={handleToggle}
-              className={`px-5 py-2.5 rounded-xl font-extrabold text-xs transition-all shadow-md cursor-pointer ${
+              className={`px-4 py-2 rounded-lg font-semibold text-xs transition-all shadow-xs cursor-pointer ${
                 availability 
-                  ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/30' 
-                  : 'bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-300'
+                  ? 'bg-slate-900 hover:bg-slate-800 text-white' 
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
               }`}
             >
               {availability ? 'Toggle Unavailable' : 'Set Available'}
@@ -112,127 +112,148 @@ export default function DonorDashboard() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="glass-card glass-card-hover rounded-3xl p-6 flex items-center gap-4 border border-slate-200 dark:border-slate-800">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500">
-              <Award className="w-6 h-6" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="glass-card rounded-xl p-5 flex items-center gap-4 border border-slate-200 shadow-xs">
+            <div className="w-10 h-10 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
+              <Award className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-2xl font-heading font-black text-slate-900 dark:text-white">{donor?.total_donations || 6} Units</div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider">Lifetime Donations</div>
+              <div className="text-2xl font-bold text-slate-900">
+                {donor?.total_donations ?? 0} Unit{(donor?.total_donations ?? 0) === 1 ? '' : 's'}
+              </div>
+              <div className="text-[11px] text-slate-500 font-medium">Lifetime Blood Donations</div>
             </div>
           </div>
 
-          <div className="glass-card glass-card-hover rounded-3xl p-6 flex items-center gap-4 border border-slate-200 dark:border-slate-800">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-500">
-              <HeartPulse className="w-6 h-6 animate-pulse" />
+          <div className="glass-card rounded-xl p-5 flex items-center gap-4 border border-slate-200 shadow-xs">
+            <div className="w-10 h-10 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-600">
+              <HeartPulse className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-2xl font-heading font-black text-rose-600 dark:text-rose-400">18 Lives</div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider">Estimated Impact</div>
+              <div className="text-2xl font-bold text-red-600">
+                {(donor?.total_donations ?? 0) * 3} Lives
+              </div>
+              <div className="text-[11px] text-slate-500 font-medium">Estimated Patient Impact (3x)</div>
             </div>
           </div>
 
-          <div className="glass-card glass-card-hover rounded-3xl p-6 flex items-center gap-4 border border-slate-200 dark:border-slate-800">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
-              <Clock className="w-6 h-6" />
+          <div className="glass-card rounded-xl p-5 flex items-center gap-4 border border-slate-200 shadow-xs">
+            <div className="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700">
+              <Clock className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-2xl font-heading font-black text-slate-900 dark:text-white">60 Days Ago</div>
-              <div className="text-[10px] text-slate-500 dark:text-slate-400 font-extrabold uppercase tracking-wider">Last Donation Date</div>
+              <div className="text-2xl font-bold text-slate-900">
+                {donor?.last_donation_date ? (() => {
+                  try {
+                    const days = Math.floor((new Date() - new Date(donor.last_donation_date)) / (1000 * 60 * 60 * 24));
+                    return days <= 0 ? 'Today' : `${days} Days Ago`;
+                  } catch {
+                    return 'Recorded';
+                  }
+                })() : 'No Prior Record'}
+              </div>
+              <div className="text-[11px] text-slate-500 font-medium">
+                {donor?.last_donation_date ? 'Last Donation Recorded' : 'Ready for 1st Donation'}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Nearby Emergency Requests List */}
-        <div className="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 border border-slate-200 dark:border-slate-800/80">
-          <div className="flex items-center justify-between">
+        <div className="glass-card rounded-2xl p-6 shadow-xs space-y-5 border border-slate-200">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
-              <h2 className="text-xl font-heading font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Zap className="w-5 h-5 text-rose-500 fill-rose-500" />
+              <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <Zap className="w-4 h-4 text-red-600 fill-red-600" />
                 Matching Emergency Blood Requests
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Respond immediately to patients matching your blood type.</p>
+              <p className="text-xs text-slate-500 mt-0.5">Respond immediately to patients matching your blood type.</p>
             </div>
-            <span className="px-3 py-1 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-extrabold rounded-full border border-rose-500/20">
+            <span className="px-2.5 py-0.5 bg-red-50 text-red-700 text-xs font-semibold rounded-full border border-red-200">
               {compatibleRequests.length} Active Alerts
             </span>
           </div>
 
-          <div className="space-y-4">
-            {compatibleRequests.map((req) => (
-              <div key={req.id} className="p-6 rounded-2xl bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 hover:border-rose-500/40 space-y-4 transition-all">
-                
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-rose-600 text-white font-black text-base flex items-center justify-center shadow-lg shadow-rose-600/30">
-                      {req.blood_group}
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-heading font-extrabold text-lg text-slate-900 dark:text-white">{req.patient_name}</h3>
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                          req.emergency_level === 'Critical' 
-                            ? 'badge-critical' 
-                            : 'badge-high'
-                        }`}>
-                          {req.emergency_level}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5 font-medium">
-                        <MapPin className="w-3.5 h-3.5 text-rose-500" /> <strong>{req.hospital_name}</strong> • {req.city}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="text-left sm:text-right">
-                    <div className="text-sm font-black text-rose-600 dark:text-rose-400">{req.units} Unit(s) Needed</div>
-                    <div className="text-[11px] text-slate-500 font-medium">Urgency: {req.required_before || 'Immediate'}</div>
-                  </div>
-                </div>
-
-                {req.additional_notes && (
-                  <p className="text-xs text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 italic">
-                    "{req.additional_notes}"
-                  </p>
-                )}
-
-                {/* Donor Response Action Buttons Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 w-full">
-                  <button 
-                    onClick={() => handleRespond(req.id, 'Accepted')}
-                    disabled={respondingId === req.id}
-                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer truncate"
-                  >
-                    <CheckCircle className="w-4 h-4 shrink-0" /> Accept Request
-                  </button>
-
-                  <button 
-                    onClick={() => handleRespond(req.id, 'Declined')}
-                    disabled={respondingId === req.id}
-                    className="w-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate"
-                  >
-                    <XCircle className="w-4 h-4 text-slate-400 shrink-0" /> Decline
-                  </button>
-
-                  <button 
-                    onClick={() => handleRespond(req.id, 'Maybe')}
-                    disabled={respondingId === req.id}
-                    className="w-full bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate"
-                  >
-                    <HelpCircle className="w-4 h-4 text-amber-500 shrink-0" /> Maybe Later
-                  </button>
-
-                  <a 
-                    href={`tel:${req.contact_number}`}
-                    className="w-full glass-card hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition-colors truncate"
-                  >
-                    <PhoneCall className="w-4 h-4 text-rose-500 shrink-0" /> Call Hospital
-                  </a>
-                </div>
-
+          <div className="space-y-3">
+            {compatibleRequests.length === 0 ? (
+              <div className="py-8 text-center text-xs text-slate-500">
+                No active emergency requests for your blood group at this time.
               </div>
-            ))}
+            ) : (
+              compatibleRequests.map((req) => (
+                <div key={req.id} className="p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 space-y-3 transition-all shadow-xs">
+                  
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-red-600 text-white font-bold text-sm flex items-center justify-center shadow-xs">
+                        {req.blood_group}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-semibold text-base text-slate-900">{req.patient_name}</h3>
+                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider ${
+                            req.emergency_level === 'Critical' 
+                              ? 'badge-critical' 
+                              : 'badge-high'
+                          }`}>
+                            {req.emergency_level}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 flex items-center gap-1 mt-0.5 font-normal">
+                          <MapPin className="w-3 h-3 text-red-600" /> <strong>{req.hospital_name}</strong> • {req.city}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-left sm:text-right">
+                      <div className="text-sm font-bold text-red-600">{req.units} Unit(s) Needed</div>
+                      <div className="text-[11px] text-slate-500 font-normal">Urgency: {req.required_before || 'Immediate'}</div>
+                    </div>
+                  </div>
+
+                  {req.additional_notes && (
+                    <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100 italic">
+                      "{req.additional_notes}"
+                    </p>
+                  )}
+
+                  {/* Donor Response Action Buttons Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 w-full">
+                    <button 
+                      onClick={() => handleRespond(req.id, 'Accepted')}
+                      disabled={respondingId === req.id}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer truncate"
+                    >
+                      <CheckCircle className="w-3.5 h-3.5 shrink-0" /> Accept Request
+                    </button>
+
+                    <button 
+                      onClick={() => handleRespond(req.id, 'Declined')}
+                      disabled={respondingId === req.id}
+                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate border border-slate-200"
+                    >
+                      <XCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" /> Decline
+                    </button>
+
+                    <button 
+                      onClick={() => handleRespond(req.id, 'Maybe')}
+                      disabled={respondingId === req.id}
+                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors cursor-pointer truncate border border-slate-200"
+                    >
+                      <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" /> Maybe Later
+                    </button>
+
+                    <a 
+                      href={`tel:${req.contact_number}`}
+                      className="w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 font-medium text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-colors truncate shadow-xs"
+                    >
+                      <PhoneCall className="w-3.5 h-3.5 text-red-600 shrink-0" /> Call Hospital
+                    </a>
+                  </div>
+
+                </div>
+              ))
+            )}
           </div>
 
         </div>

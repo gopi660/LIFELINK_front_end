@@ -23,31 +23,28 @@ export default function StatusTracker({ status }) {
   const currentIndex = getStepIndex(status);
 
   return (
-    <div className="w-full glass-card rounded-3xl p-6 shadow-2xl relative overflow-hidden transition-all border border-slate-200 dark:border-slate-800/80">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-rose-500/10 dark:bg-rose-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
-      <div className="flex items-center justify-between mb-6">
+    <div className="w-full glass-card rounded-2xl p-6 shadow-xs relative overflow-hidden transition-all border border-slate-200">
+      <div className="flex items-center justify-between mb-5">
         <div>
-          <h4 className="text-[11px] uppercase font-extrabold text-slate-500 dark:text-slate-400 tracking-widest">
+          <h4 className="text-xs uppercase font-semibold text-slate-500 tracking-wider">
             Live Emergency Pipeline
           </h4>
-          <p className="text-xl font-heading font-black text-slate-900 dark:text-white mt-0.5 flex items-center gap-2">
-            Status: <span className="text-rose-600 dark:text-rose-400 font-extrabold">{status || 'Searching'}</span>
+          <p className="text-lg font-bold text-slate-900 mt-0.5 flex items-center gap-2">
+            Status: <span className="text-red-600 font-bold">{status || 'Searching'}</span>
           </p>
         </div>
-        <span className="flex items-center gap-2 px-3 py-1.5 bg-rose-500/10 dark:bg-rose-500/20 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-extrabold rounded-full">
-          <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-          Real-Time Response
+        <span className="flex items-center gap-1.5 px-3 py-1 bg-red-50 border border-red-200 text-red-700 text-xs font-semibold rounded-md">
+          Real-Time Pipeline
         </span>
       </div>
 
-      <div className="relative flex items-center justify-between mt-8 px-2">
+      <div className="relative flex items-center justify-between mt-6 px-2">
         {/* Track Line Background */}
-        <div className="absolute top-5 left-8 right-8 h-1 bg-slate-200 dark:bg-slate-800/80 -z-0 rounded-full"></div>
+        <div className="absolute top-4.5 left-8 right-8 h-1 bg-slate-200 -z-0 rounded-full"></div>
         
         {/* Track Line Active Fill */}
         <div 
-          className="absolute top-5 left-8 h-1 bg-gradient-to-r from-rose-500 via-red-500 to-emerald-500 transition-all duration-700 -z-0 rounded-full shadow-[0_0_12px_rgba(225,29,72,0.6)]"
+          className="absolute top-4.5 left-8 h-1 bg-red-600 transition-all duration-500 -z-0 rounded-full"
           style={{ width: `calc(${(currentIndex / (steps.length - 1)) * 100}% - 32px)` }}
         ></div>
 
@@ -59,21 +56,21 @@ export default function StatusTracker({ status }) {
           return (
             <div key={step.key} className="relative z-10 flex flex-col items-center group">
               <div 
-                className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-300 border ${
+                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 border ${
                   isDone 
-                    ? 'bg-gradient-to-br from-rose-500 to-red-600 border-rose-400 text-white shadow-lg shadow-rose-600/35' 
-                    : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-400 dark:text-slate-500'
-                } ${isCurrent ? 'scale-110 ring-4 ring-rose-500/30 animate-pulse' : ''}`}
+                    ? 'bg-red-600 border-red-600 text-white shadow-xs' 
+                    : 'bg-white border-slate-300 text-slate-400'
+                } ${isCurrent ? 'ring-2 ring-red-600/30' : ''}`}
               >
-                <Icon className="w-5 h-5" />
+                <Icon className="w-4 h-4" />
               </div>
 
-              <span className={`text-[11px] font-bold mt-2.5 text-center max-w-[84px] leading-tight ${
+              <span className={`text-[11px] font-medium mt-2 text-center max-w-[80px] leading-tight ${
                 isCurrent 
-                  ? 'text-rose-600 dark:text-rose-400 font-extrabold' 
+                  ? 'text-red-600 font-bold' 
                   : isDone 
-                    ? 'text-slate-800 dark:text-slate-200' 
-                    : 'text-slate-400 dark:text-slate-500'
+                    ? 'text-slate-900 font-semibold' 
+                    : 'text-slate-400'
               }`}>
                 {step.label}
               </span>

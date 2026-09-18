@@ -4,58 +4,57 @@ import { HeartPulse, PhoneCall, ShieldCheck, Mail, MapPin, ExternalLink } from '
 
 export default function Footer() {
   return (
-    <footer className="bg-white/80 dark:bg-[#070a13] border-t border-slate-200 dark:border-slate-800/80 pt-16 pb-12 text-slate-600 dark:text-slate-400 transition-colors relative overflow-hidden">
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-rose-500/5 blur-3xl pointer-events-none"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-16">
+    <footer className="bg-white border-t border-slate-200 pt-14 pb-12 text-slate-600 transition-colors relative">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-14">
           
           {/* Col 1: Brand */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-rose-500 to-red-600 flex items-center justify-center text-white shadow-lg shadow-rose-600/30">
-                <HeartPulse className="w-5 h-5 animate-pulse" />
+          <div className="space-y-3.5">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 flex items-center justify-center text-red-600 shrink-0">
+                <svg className="w-7 h-7 fill-red-600 text-red-600" viewBox="0 0 24 24">
+                  <path d="M12 2C12 2 4.5 10.5 4.5 15.5C4.5 19.64 7.86 23 12 23C16.14 23 19.5 19.64 19.5 15.5C19.5 10.5 12 2 12 2Z" />
+                </svg>
               </div>
-              <span className="text-xl font-heading font-black text-slate-900 dark:text-white">
-                Life<span className="text-rose-600 dark:text-rose-500">Link</span>
+              <span className="text-lg font-bold text-slate-900">
+                LifeLink
               </span>
             </div>
-            <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+            <p className="text-[13.5px] leading-relaxed text-slate-500">
               Connecting blood donors with emergency ICU patients in real time across India. Integrated with National Emergency Response (112) & e-RaktKosh standards.
             </p>
-            <div className="flex items-center gap-2 text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full w-fit">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <div className="flex items-center gap-2 text-[11.5px] font-medium text-slate-700 bg-slate-100 border border-slate-200 px-3 py-1 rounded-lg w-fit">
               India Emergency Dispatch Operational 24/7
             </div>
           </div>
 
           {/* Col 2: Quick Links */}
           <div>
-            <h4 className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-widest mb-4">Quick Navigation</h4>
-            <ul className="space-y-3 text-xs font-semibold">
+            <h4 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-4">Quick Navigation</h4>
+            <ul className="space-y-2.5 text-[13.5px] font-medium">
               <li>
-                <Link to="/request-blood" className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors flex items-center gap-1.5">
+                <Link to="/request-blood" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
                   Request Emergency Blood
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors flex items-center gap-1.5">
+                <Link to="/register" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
                   Register as Blood Donor
                 </Link>
               </li>
               <li>
-                <Link to="/map" className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors flex items-center gap-1.5">
+                <Link to="/map" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
                   Interactive Live Radar Map
                 </Link>
               </li>
               <li>
-                <Link to="/donor-dashboard" className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors flex items-center gap-1.5">
+                <Link to="/donor-dashboard" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
                   Donor Portal
                 </Link>
               </li>
               <li>
-                <a href="https://eraktkosh.in" target="_blank" rel="noopener noreferrer" className="hover:text-rose-500 dark:hover:text-rose-400 transition-colors flex items-center gap-1.5">
-                  e-RaktKosh Portal (Govt. of India) <ExternalLink className="w-3 h-3 text-slate-400" />
+                <a href="https://eraktkosh.in" target="_blank" rel="noopener noreferrer" className="hover:text-red-600 transition-colors flex items-center gap-1.5">
+                  e-RaktKosh Portal (Govt. of India) <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                 </a>
               </li>
             </ul>
@@ -63,30 +62,26 @@ export default function Footer() {
 
           {/* Col 3: Real Indian Emergency Helplines */}
           <div>
-            <h4 className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-widest mb-4">Official Indian Emergency Helplines</h4>
-            <div className="glass-card border border-rose-500/20 rounded-2xl p-4 space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-                <div>
-                  <p className="text-[10px] text-rose-500 dark:text-rose-400 font-extrabold uppercase tracking-widest">National Emergency Response</p>
-                  <a href="tel:112" className="text-slate-900 dark:text-white font-heading font-black text-base hover:text-rose-500 flex items-center gap-1.5">
-                    <PhoneCall className="w-4 h-4 text-rose-500" /> 112 (All Emergency Services)
-                  </a>
-                </div>
+            <h4 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-4">Official Indian Emergency Helplines</h4>
+            <div className="glass-card border border-slate-200 rounded-xl p-4 space-y-3 shadow-sm">
+              <div className="border-b border-slate-100 pb-2">
+                <p className="text-[11px] text-red-600 font-semibold uppercase tracking-wider">National Emergency Response</p>
+                <a href="tel:112" className="text-slate-900 font-bold text-[14.5px] hover:text-red-600 flex items-center gap-1.5 mt-0.5">
+                  <PhoneCall className="w-3.5 h-3.5 text-red-600" /> 112 (All Emergency Services)
+                </a>
               </div>
 
-              <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-                <div>
-                  <p className="text-[10px] text-rose-500 dark:text-rose-400 font-extrabold uppercase tracking-widest">National Blood Transfusion Helpline</p>
-                  <a href="tel:1097" className="text-slate-900 dark:text-white font-heading font-black text-base hover:text-rose-500 flex items-center gap-1.5">
-                    <PhoneCall className="w-4 h-4 text-emerald-500" /> 1097 (NACO / NBTC Hotline)
-                  </a>
-                </div>
+              <div className="border-b border-slate-100 pb-2">
+                <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">Blood Transfusion Helpline</p>
+                <a href="tel:1097" className="text-slate-900 font-bold text-[14.5px] hover:text-red-600 flex items-center gap-1.5 mt-0.5">
+                  <PhoneCall className="w-3.5 h-3.5 text-red-600" /> 1097 (NACO / NBTC Hotline)
+                </a>
               </div>
 
               <div>
-                <p className="text-[10px] text-rose-500 dark:text-rose-400 font-extrabold uppercase tracking-widest">National Ambulance Helpline</p>
-                <a href="tel:108" className="text-slate-900 dark:text-white font-heading font-black text-base hover:text-rose-500 flex items-center gap-1.5">
-                  <PhoneCall className="w-4 h-4 text-amber-500" /> 108 (Emergency Ambulance)
+                <p className="text-[11px] text-slate-500 font-semibold uppercase tracking-wider">National Ambulance Helpline</p>
+                <a href="tel:108" className="text-slate-900 font-bold text-[14.5px] hover:text-red-600 flex items-center gap-1.5 mt-0.5">
+                  <PhoneCall className="w-3.5 h-3.5 text-amber-600" /> 108 (Emergency Ambulance)
                 </a>
               </div>
             </div>
@@ -94,17 +89,17 @@ export default function Footer() {
 
           {/* Col 4: Platform Security & Standards */}
           <div className="space-y-3">
-            <h4 className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-widest mb-4">Security & Verification</h4>
-            <div className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300 font-semibold">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+            <h4 className="text-[13px] font-bold text-slate-900 uppercase tracking-wider mb-4">Security & Verification</h4>
+            <div className="flex items-center gap-2 text-[13.5px] text-slate-700 font-medium">
+              <ShieldCheck className="w-4 h-4 text-red-600" />
               100% Aadhaar/Phone Verified Donors
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300 font-semibold">
-              <Mail className="w-4 h-4 text-sky-500" />
+            <div className="flex items-center gap-2 text-[13.5px] text-slate-700 font-medium">
+              <Mail className="w-4 h-4 text-slate-400" />
               Real-Time SMS & Email Alerts
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300 font-semibold">
-              <MapPin className="w-4 h-4 text-rose-500" />
+            <div className="flex items-center gap-2 text-[13.5px] text-slate-700 font-medium">
+              <MapPin className="w-4 h-4 text-red-600" />
               Haversine GPS Radius Matcher
             </div>
           </div>
@@ -112,12 +107,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-slate-200 dark:border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-500 gap-4 font-medium">
+        <div className="border-t border-slate-200 pt-7 flex flex-col sm:flex-row items-center justify-between text-[12.5px] text-slate-500 gap-4 font-normal">
           <p>© 2026 LifeLink Emergency Blood Dispatch Network. Built for real-time medical response in India.</p>
           <div className="flex gap-6">
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer">Privacy Policy</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer">Donor Safety Guidelines</span>
-            <span className="hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer">Terms of Service</span>
+            <span className="hover:text-slate-800 cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-slate-800 cursor-pointer">Donor Safety Guidelines</span>
+            <span className="hover:text-slate-800 cursor-pointer">Terms of Service</span>
           </div>
         </div>
       </div>

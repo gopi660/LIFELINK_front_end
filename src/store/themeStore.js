@@ -1,30 +1,30 @@
 import { create } from 'zustand';
 
-export const useThemeStore = create((set, get) => ({
-  theme: localStorage.getItem('lifelink_theme') || 'dark',
+export const useThemeStore = create((set) => ({
+  theme: 'light',
 
-  setTheme: (newTheme) => {
-    localStorage.setItem('lifelink_theme', newTheme);
+  setTheme: () => {
     const root = document.documentElement;
-    
-    if (newTheme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.remove('dark');
-      root.classList.add('light');
-    }
-    set({ theme: newTheme });
+    root.classList.remove('dark');
+    root.classList.add('light');
+    localStorage.setItem('lifelink_theme', 'light');
+    set({ theme: 'light' });
   },
 
   toggleTheme: () => {
-    const current = get().theme;
-    const next = current === 'dark' ? 'light' : 'dark';
-    get().setTheme(next);
+    // Light theme locked permanently per user request
+    const root = document.documentElement;
+    root.classList.remove('dark');
+    root.classList.add('light');
+    localStorage.setItem('lifelink_theme', 'light');
+    set({ theme: 'light' });
   },
 
   initTheme: () => {
-    const saved = localStorage.getItem('lifelink_theme') || 'dark';
-    get().setTheme(saved);
+    const root = document.documentElement;
+    root.classList.remove('dark');
+    root.classList.add('light');
+    localStorage.setItem('lifelink_theme', 'light');
+    set({ theme: 'light' });
   }
 }));

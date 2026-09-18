@@ -1,64 +1,55 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import BloodGroupSelector from '../components/ui/BloodGroupSelector';
-import { getCityCoordinates } from '../utils/cityCoordinates';
-import { User, Mail, Phone, Lock, MapPin, HeartPulse, Sparkles } from 'lucide-react';
+import { HeartPulse, Lock, Mail, User, Phone, MapPin, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Register() {
-  const { register, loading } = useAuthStore();
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     password: '',
-    register_as_donor: true,
+    role: 'donor',
     blood_group: 'O+',
-    age: '25',
-    gender: 'Male',
     city: 'Bangalore',
-    address: 'Indiranagar, Bangalore',
     latitude: 12.9716,
-    longitude: 77.5946
+    longitude: 77.5946,
+    age: 25,
+    gender: 'Male',
+    register_as_donor: true
   });
+
+  const { register, loading } = useAuthStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectPath = location.state?.from?.pathname || '/donor-dashboard';
+  const customMessage = location.state?.message;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (name === 'city') {
-      const coords = getCityCoordinates(value);
-      setFormData(prev => ({
-        ...prev,
-        city: value,
-        latitude: coords ? coords[0] : prev.latitude,
-        longitude: coords ? coords[1] : prev.longitude
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
   const handleDetectLocation = () => {
     if (navigator.geolocation) {
-      toast.loading('Detecting your GPS location...');
+      toast.loading('Acquiring high-accuracy GPS coordinates...', { id: 'gps-loc' });
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          toast.dismiss();
           setFormData(prev => ({
             ...prev,
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude
+            latitude: parseFloat(pos.coords.latitude.toFixed(6)),
+            longitude: parseFloat(pos.coords.longitude.toFixed(6))
           }));
-          toast.success(`GPS Location acquired: (${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)})`);
+          toast.success('GPS coordinates locked!', { id: 'gps-loc' });
         },
         () => {
-          toast.dismiss();
-          toast.error('Unable to retrieve GPS. Using default Bangalore location.');
+          toast.error('Unable to fetch precise location. Defaulting to city center.', { id: 'gps-loc' });
         }
       );
     }
@@ -66,37 +57,67 @@ export default function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.phone || !formData.password) {
-      toast.error('Please fill in all required fields');
+    if (formData.register_as_donor && !formData.blood_group) {
+      toast.error('Please specify your blood group.');
       return;
     }
 
-    try {
-      await register(formData);
-      navigate('/donor-dashboard');
-    } catch (err) {
-      console.error(err);
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      password: formData.password,
+      role: formData.register_as_donor ? 'donor' : 'user',
+      donor_profile: formData.register_as_donor ? {
+        blood_group: formData.blood_group,
+        city: formData.city,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        age: parseInt(formData.age) || 25,
+        gender: formData.gender
+      } : null
+    };
+
+    const success = await register(payload);
+    if (success) {
+      toast.success('Account created! Welcome to LifeLink Network.');
+      navigate(redirectPath, { replace: true });
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#070a13] text-slate-900 dark:text-slate-100 py-16 flex items-center justify-center px-4 transition-colors">
-      <div className="max-w-xl w-full glass-card rounded-3xl p-8 sm:p-10 shadow-2xl space-y-8 border border-slate-200 dark:border-slate-800/80 relative overflow-hidden">
+    <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
+      <div className="max-w-xl w-full glass-card rounded-2xl p-8 space-y-6 border border-slate-200 shadow-sm">
         
-        <div className="text-center space-y-3">
-          <div className="w-14 h-14 rounded-3xl bg-gradient-to-br from-rose-500 via-red-600 to-rose-700 text-white flex items-center justify-center mx-auto shadow-xl shadow-rose-600/35 border-t border-white/20">
-            <HeartPulse className="w-8 h-8 animate-pulse" />
+        <div className="text-center space-y-2">
+          <div className="w-10 h-10 flex items-center justify-center mx-auto text-red-600">
+            <svg className="w-10 h-10 fill-red-600 text-red-600" viewBox="0 0 24 24">
+              <path d="M12 2C12 2 4.5 10.5 4.5 15.5C4.5 19.64 7.86 23 12 23C16.14 23 19.5 19.64 19.5 15.5C19.5 10.5 12 2 12 2Z" />
+            </svg>
           </div>
-          <h2 className="text-3xl font-heading font-black text-slate-900 dark:text-white">Join LifeLink Network</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Register as a life-saving blood donor or emergency requester</p>
+          <h2 className="text-2xl font-bold text-slate-900">Join LifeLink Network</h2>
+          <p className="text-xs text-slate-500">Register as a life-saving blood donor or emergency requester</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Authentication Notice Banner */}
+        {customMessage ? (
+          <div className="bg-amber-50 border border-amber-200 text-amber-900 text-xs font-medium p-3 rounded-xl flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+            <span>{customMessage}</span>
+          </div>
+        ) : redirectPath === '/request-blood' ? (
+          <div className="bg-red-50 border border-red-200 text-red-900 text-xs font-medium p-3 rounded-xl flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+            <span>Create your account to submit this emergency blood request.</span>
+          </div>
+        ) : null}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           
           <div>
-            <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Full Name *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Full Name *</label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
               <input 
                 type="text" 
                 name="name"
@@ -104,16 +125,16 @@ export default function Register() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Dr. Rajesh Sharma"
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-rose-500"
+                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xs"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Email Address *</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Email Address *</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
                 <input 
                   type="email" 
                   name="email"
@@ -121,32 +142,32 @@ export default function Register() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="rajesh@gmail.com"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-rose-500"
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xs"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Phone Number *</label>
+              <label className="block text-xs font-semibold text-slate-700 mb-1">Phone Number *</label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+                <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
                 <input 
                   type="text" 
                   name="phone"
                   required
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="Enter mobile number (e.g. +91 XXXXX XXXXX)"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-rose-500"
+                  placeholder="Enter mobile number"
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xs"
                 />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Password *</label>
+            <label className="block text-xs font-semibold text-slate-700 mb-1">Password *</label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
               <input 
                 type="password" 
                 name="password"
@@ -154,30 +175,30 @@ export default function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="••••••••"
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-rose-500"
+                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xs"
               />
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between">
+          <div className="p-3.5 rounded-xl bg-red-50/70 border border-red-200/80 flex items-center justify-between">
             <div className="space-y-0.5">
-              <span className="text-xs font-heading font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <HeartPulse className="w-4 h-4 text-rose-500 animate-pulse" />
+              <span className="text-xs font-semibold text-slate-900 flex items-center gap-1.5">
+                <HeartPulse className="w-4 h-4 text-red-600" />
                 Register as Emergency Blood Donor
               </span>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Receive real-time SMS & Email alerts when nearby ICU patients require your blood type</p>
+              <p className="text-[11px] text-slate-500">Receive real-time SMS & Email alerts when nearby ICU patients require your blood type</p>
             </div>
             <input 
               type="checkbox"
               name="register_as_donor"
               checked={formData.register_as_donor}
               onChange={handleChange}
-              className="w-5 h-5 accent-rose-500 rounded cursor-pointer shrink-0"
+              className="w-4 h-4 accent-red-600 rounded cursor-pointer shrink-0 ml-3"
             />
           </div>
 
           {formData.register_as_donor && (
-            <div className="space-y-5 pt-3 border-t border-slate-200 dark:border-slate-800/80">
+            <div className="space-y-4 pt-2 border-t border-slate-200">
               
               <BloodGroupSelector 
                 value={formData.blood_group}
@@ -187,23 +208,23 @@ export default function Register() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Age</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Age</label>
                   <input 
                     type="number" 
                     name="age"
                     value={formData.age}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">Gender</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Gender</label>
                   <select 
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xs"
                   >
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -214,24 +235,24 @@ export default function Register() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">City</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">City</label>
                   <input 
                     type="text" 
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-[#070a13] border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white text-xs font-semibold focus:outline-none focus:border-rose-500"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-slate-900 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 shadow-xs"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5">GPS Coordinates</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">GPS Coordinates</label>
                   <button 
                     type="button"
                     onClick={handleDetectLocation}
-                    className="w-full py-3 glass-card hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-extrabold rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                    className="w-full py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-xl border border-slate-200 flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-xs"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                    <MapPin className="w-3.5 h-3.5 text-red-600" />
                     Detect Current GPS
                   </button>
                 </div>
@@ -243,15 +264,15 @@ export default function Register() {
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-rose-500 via-red-600 to-rose-600 hover:from-rose-600 hover:to-red-700 text-white font-heading font-black py-4 rounded-2xl shadow-xl shadow-rose-600/35 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer border-t border-white/20 mt-6"
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 text-sm cursor-pointer mt-4"
           >
             {loading ? 'Registering Account...' : 'Complete Donor Registration'}
           </button>
 
         </form>
 
-        <div className="text-center pt-2 text-xs text-slate-600 dark:text-slate-400 font-medium">
-          Already have an account? <Link to="/login" className="text-rose-500 font-extrabold hover:underline">Log In</Link>
+        <div className="text-center pt-1 text-xs text-slate-500 font-normal">
+          Already have an account? <Link to="/login" state={{ from: location.state?.from, message: customMessage }} className="text-red-600 font-semibold hover:underline">Log In</Link>
         </div>
 
       </div>

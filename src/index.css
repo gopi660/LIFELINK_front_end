@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
 @import "leaflet/dist/leaflet.css";
 
 @layer base {
   :root {
     --primary: #dc2626;
     --primary-hover: #b91c1c;
-    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  html {
+    font-size: 16.5px;
   }
 
   html, body, #root {
@@ -17,12 +20,13 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-color: #f8fafc !important;
+    color: #0f172a;
   }
 
   body {
     font-family: var(--font-body);
-    transition: background-color 0.25s ease-in-out, color 0.25s ease-in-out;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.011em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -30,60 +34,51 @@
   h1, h2, h3, h4, .font-heading {
     font-family: var(--font-heading);
     letter-spacing: -0.025em;
-  }
-
-  /* Dark Mode Default */
-  html.dark, html.dark body, html.dark #root {
-    background-color: #090d16 !important;
-    color: #f1f5f9;
-  }
-
-  /* Light Mode */
-  html:not(.dark), html:not(.dark) body, html:not(.dark) #root {
-    background-color: #f8fafc !important;
-    color: #0f172a;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-/* Subtle Grid Texture */
-.bg-grid-pattern {
-  background-image: radial-gradient(rgba(225, 29, 72, 0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
+/* Global +3px Increase on Small Texts for Human-Crafted Legibility */
+.text-xs {
+  font-size: 15px !important;
+  line-height: 1.45 !important;
 }
 
-html:not(.dark) .bg-grid-pattern {
-  background-image: radial-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px);
-  background-size: 24px 24px;
+.text-sm {
+  font-size: 16.5px !important;
+  line-height: 1.5 !important;
 }
 
-/* Premium Healthcare Glass Card System */
+.text-\[9px\] {
+  font-size: 12px !important;
+}
+
+.text-\[10px\] {
+  font-size: 13px !important;
+}
+
+.text-\[11px\] {
+  font-size: 14px !important;
+}
+
+/* Crisp Enterprise Card System (Clean Light Theme) */
 .glass-card {
-  background: rgba(13, 19, 32, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
-}
-
-html:not(.dark) .glass-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.06);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
 }
 
 .glass-card-hover {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .glass-card-hover:hover {
   transform: translateY(-2px);
-  border-color: rgba(225, 29, 72, 0.35);
-  box-shadow: 0 16px 36px -12px rgba(225, 29, 72, 0.12);
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
 }
 
-/* Top Accent Line on Cards */
+/* Subtle Top Accent Line on Primary Cards */
 .card-accent-top {
   position: relative;
   overflow: hidden;
@@ -94,82 +89,61 @@ html:not(.dark) .glass-card {
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #dc2626, #ef4444, transparent);
+  height: 3px;
+  background: linear-gradient(90deg, #dc2626, #ef4444);
 }
 
-/* Professional Urgency Badges */
+/* Professional Healthcare Badges */
 .badge-critical {
-  background: rgba(225, 29, 72, 0.12);
-  color: #fb7185;
-  border: 1px solid rgba(225, 29, 72, 0.3);
-}
-html:not(.dark) .badge-critical {
-  background: #ffe4e6;
-  color: #e11d48;
-  border: 1px solid #fecdd3;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
 }
 
 .badge-high {
-  background: rgba(245, 158, 11, 0.12);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-}
-html:not(.dark) .badge-high {
-  background: #fef3c7;
-  color: #d97706;
+  background: #fffbeb;
+  color: #b45309;
   border: 1px solid #fde68a;
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.12);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-html:not(.dark) .badge-success {
-  background: #d1fae5;
-  color: #059669;
-  border: 1px solid #a7f3d0;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
 }
 
-/* Custom Scrollbar */
+/* Custom Clean Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-html.dark ::-webkit-scrollbar-track {
-  background: #090d16;
-}
-html.dark ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 9999px;
-}
-html.dark ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
-}
-
-html:not(.dark) ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #f1f5f9;
 }
-html:not(.dark) ::-webkit-scrollbar-thumb {
+
+::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Radar Pulse Effect */
 @keyframes radar-ping {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.7);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6);
   }
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(225, 29, 72, 0);
+    box-shadow: 0 0 0 8px rgba(220, 38, 38, 0);
   }
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
   }
 }
 
@@ -177,33 +151,21 @@ html:not(.dark) ::-webkit-scrollbar-thumb {
   animation: radar-ping 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }
 
-/* Custom Leaflet Map Styling */
+/* Leaflet Map Crisp Light Styling */
 .custom-leaflet-map .leaflet-container {
   width: 100%;
   height: 100%;
   border-radius: 16px;
 }
 
-html.dark .leaflet-popup-content-wrapper {
-  background-color: #0d1320 !important;
-  color: #f8fafc !important;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px !important;
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7) !important;
-}
-
-html.dark .leaflet-popup-tip {
-  background-color: #0d1320 !important;
-}
-
-html:not(.dark) .leaflet-popup-content-wrapper {
+.leaflet-popup-content-wrapper {
   background-color: #ffffff !important;
   color: #0f172a !important;
   border: 1px solid #e2e8f0;
-  border-radius: 14px !important;
-  box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.12) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12) !important;
 }
 
-html:not(.dark) .leaflet-popup-tip {
+.leaflet-popup-tip {
   background-color: #ffffff !important;
 }
