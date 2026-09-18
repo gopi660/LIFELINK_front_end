@@ -50,7 +50,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success(`Account registered successfully!`);
       return user;
     } catch (err) {
-      const errorMsg = err.response?.data?.error || 'Registration failed.';
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || err.message || 'Registration failed.';
       set({ error: errorMsg, loading: false });
       toast.error(errorMsg);
       throw new Error(errorMsg);

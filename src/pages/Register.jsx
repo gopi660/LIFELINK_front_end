@@ -68,6 +68,13 @@ export default function Register() {
       phone: formData.phone,
       password: formData.password,
       role: formData.register_as_donor ? 'donor' : 'user',
+      register_as_donor: formData.register_as_donor,
+      blood_group: formData.blood_group,
+      city: formData.city,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
+      age: parseInt(formData.age) || 25,
+      gender: formData.gender,
       donor_profile: formData.register_as_donor ? {
         blood_group: formData.blood_group,
         city: formData.city,
